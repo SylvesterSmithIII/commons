@@ -10,7 +10,7 @@ export default function Home() {
         <h6>YOUR STARTING POINT FOR SUCCESS</h6>
       </div> */}
 
-      <div className="flex flex-col justify-center items-center font-bold text-8axl lg:text-9xl">
+      <div className="flex flex-col justify-center items-center font-bold text-8xl lg:text-9xl">
         <h1 >LEARN.</h1>
         <h1>CREATE.</h1>
         <h1>BUILD.</h1>
