@@ -1,1 +1,8 @@
 @import "tailwindcss";
+
+
+
+
+.font-stardom {
+  font-family: var(--font-stardom) !important;
+}
