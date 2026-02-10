@@ -1,8 +1,15 @@
 @import "tailwindcss";
 
-
-
 .font-stardom {
   font-family: var(--font-stardom) !important;
 }
 
+.font-parf {
+  font-family: var(--font-parf) !important;
+}
+
+
+
+@utility gray-link {
+  @apply hover:text-gray-600 transition-all duration-300 ease-in-out
+}

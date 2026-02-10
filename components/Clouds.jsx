@@ -1,43 +1,50 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "motion/react";
+import { forwardRef, useEffect, useRef, useImperativeHandle } from "react";
 
-export default function Clouds({ fadeStart = 0.4, fadeEnd = 0.7 }) {
-  const { scrollYProgress } = useScroll();
+const Clouds = forwardRef(function Clouds({ onReady }, ref) {
+  const containerRef = useRef(null);
+  const readyFired = useRef(false);
 
-  // Horizontal parallax
-  const x1 = useTransform(scrollYProgress, [fadeStart, fadeEnd], [-200, 200]);
-  const x2 = useTransform(scrollYProgress, [fadeStart, fadeEnd], [250, -250]);
-  const x3 = useTransform(scrollYProgress, [fadeStart, fadeEnd], [-150, 150]);
+  // Expose the container DOM node to parent via ref
+  useImperativeHandle(ref, () => containerRef.current, []);
 
-  // Vertical movement
-  const y1 = useTransform(scrollYProgress, [fadeStart, fadeEnd], [200, -50]);
-  const y2 = useTransform(scrollYProgress, [fadeStart, fadeEnd], [250, -20]);
-  const y3 = useTransform(scrollYProgress, [fadeStart, fadeEnd], [180, -80]);
+  // Load SVG, then signal ready
+  useEffect(() => {
+    let cancelled = false;
 
-  // Fade in and fade out
-  const opacity = useTransform(scrollYProgress, [fadeStart, fadeEnd], [0, 1]);
+    fetch("/cloud-overlay.svg")
+      .then((res) => res.text())
+      .then((svgText) => {
+        if (cancelled || !containerRef.current) return;
+
+        containerRef.current.innerHTML = svgText;
+
+        const svgEl = containerRef.current.querySelector("svg");
+        if (svgEl) {
+          svgEl.setAttribute("width", "100%");
+          svgEl.setAttribute("height", "100%");
+          svgEl.setAttribute("preserveAspectRatio", "xMidYMid slice");
+          svgEl.style.display = "block";
+        }
+
+        if (!readyFired.current) {
+          readyFired.current = true;
+          onReady?.();
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [onReady]);
 
   return (
-    <motion.div
-      className="absolute inset-0 z-20 pointer-events-none overflow-hidden"
-      style={{ opacity }}
-    >
-      <motion.img
-        src="/cloud1.svg"
-        className="absolute top-0 left-0 w-full h-full object-cover"
-        style={{ x: x1, y: y1 }}
-      />
-      <motion.img
-        src="/cloud2.svg"
-        className="absolute top-0 left-0 w-full h-full object-cover"
-        style={{ x: x2, y: y2 }}
-      />
-      <motion.img
-        src="/cloud3.svg"
-        className="absolute top-0 left-0 w-full h-full object-cover"
-        style={{ x: x3, y: y3 }}
-      />
-    </motion.div>
+    <div
+      ref={containerRef}
+      className="fixed inset-0 w-screen h-screen overflow-hidden z-50 pointer-events-none"
+    />
   );
-}
+});
+
+export default Clouds;

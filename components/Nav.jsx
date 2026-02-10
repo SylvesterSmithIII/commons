@@ -1,37 +1,17 @@
-import { useGSAP } from "@gsap/react"
-import gsap from "gsap"
-
 export default function Nav() {
-    useGSAP(() => {
-        const navTween = gsap.timeline({
-            scrollTrigger: {
-                trigger: 'nav',
-                start: 'bottom top',
-            }
-        })
+  return (
+    <nav className="fixed top-0 z-50 w-full py-4 text-3xl text-white font-semibold">
+      <div className="flex justify-between mx-24">
+        <a href="#home" className="flex items-center gap-2">
+          <p id="home" className="gray-link opacity-0 translate-y-6">HOME</p>
+        </a>
 
-        navTween.fromTo('nav', { backgroundColor: 'transparent'}, {
-            backgroundColor: '#00000050',
-            backgroundFilter: 'blur(10px)',
-            duration: 1,
-            ease: 'power1.inOut'
-        })
-    })
-
-    return (
-        <nav className="fixed top-0 z-50 w-full py-4 text-lg">
-            <div className="flex justify-between mx-24 ">
-                <a href="#home" className="flex items-center gap-2">
-                    <p>The Commons</p>
-                </a>
-
-                <ul>
-                    <li>
-                        <a href={`#about`}>About</a>
-                        <a href={`#learn`}>Learn</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    )
+        <ul className="flex flex-col items-end gap-2">
+          <li><a className="gray-link nav-link opacity-0 translate-y-6" href="#about">CONTACT</a></li>
+          <li><a className="gray-link nav-link opacity-0 translate-y-6" href="#learn">ABOUT</a></li>
+          <li><a className="gray-link nav-link opacity-0 translate-y-6" href="#learn">LEARN</a></li>
+        </ul>
+      </div>
+    </nav>
+  );
 }
